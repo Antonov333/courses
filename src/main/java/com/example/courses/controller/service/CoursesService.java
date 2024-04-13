@@ -34,11 +34,12 @@ public class CoursesService {
         if (responseMessage.getErrCode() != 0) {
             return responseMessage;
         }
-//TODO: implement code to register and keep course data in collection
+// Registering and keeping course data in collection
         LocalDateTime registrationTime = LocalDateTime.now();
         CourseRegistered courseRegistered = CoursesMapper.INSTANCE.getCourseRegistered(courseDto);
         courseRegistered.setRegistrationTime(registrationTime);
         coursesStorage.getStorage().get(courseRegistered.getCurrencyId()).add(courseRegistered);
+
         return successMessage();
     }
 
