@@ -79,6 +79,28 @@ public class CoursesService {
             return getResponseMessage(1,
                     "Получен пустой массив");
         }
+
+        // Обрабатываем массив
+        int totalCountOfCourses = courseData.length;
+        int countOfLoadedCourses = 0;
+
+        for (CourseRegistered c : courseData) {
+            if (c == null) {
+                continue;
+            }
+            if (checkCourseDto(CoursesMapper.INSTANCE.getCourseDto(c)).getErrCode() != 0) {
+                continue;
+            }
+            LocalDateTime oldestTime = coursesStorage.getStorage().get(c.getCurrencyId()).get(0).getRegTime();
+            if (oldestTime.isAfter(c.getRegTime())) {
+                continue; // пропускаем слишком старый курс
+            }
+
+
+        }
+
+
+
         return successMessage();
     }
 }

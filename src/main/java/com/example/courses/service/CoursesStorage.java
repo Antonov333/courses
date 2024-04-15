@@ -14,7 +14,7 @@ import static com.example.courses.utils.Utils.getCurrencyCourseNumber;
 @Repository
 public class CoursesStorage {
 
-    private HashMap<String, CircularFifoQueue<CourseRegistered>> storage = new HashMap<>();
+    private final HashMap<String, CircularFifoQueue<CourseRegistered>> storage = new HashMap<>();
 
     CoursesStorage() {
         Utils.getSupportedCurrencies().forEach((c) -> storage.put(c,

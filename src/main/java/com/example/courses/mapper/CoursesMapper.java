@@ -11,4 +11,6 @@ public interface CoursesMapper {
 
     CourseRegistered getCourseRegistered(CourseDto courseDto);
 
+    CourseDto getCourseDto(CourseRegistered courseRegistered);
+
 }
