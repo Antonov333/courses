@@ -1,4 +1,4 @@
-package com.example.courses.controller.service;
+package com.example.courses.service;
 
 import com.example.courses.mapper.CoursesMapper;
 import com.example.courses.model.CourseDto;
@@ -10,9 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Currency;
 
-import static com.example.courses.controller.utils.Utils.*;
+import static com.example.courses.utils.Utils.*;
 
 @RequiredArgsConstructor
 @Service
@@ -32,36 +31,16 @@ public class CoursesService {
 
         ResponseMessage responseMessage = checkCourseDto(courseDto);
         if (responseMessage.getErrCode() != 0) {
-            return responseMessage;
+            return responseMessage; // Something went wrong, so return message with explanation
         }
 // Registering and keeping course data in collection
         LocalDateTime registrationTime = LocalDateTime.now();
         CourseRegistered courseRegistered = CoursesMapper.INSTANCE.getCourseRegistered(courseDto);
-        courseRegistered.setRegistrationTime(registrationTime);
+        courseRegistered.setRegTime(registrationTime);
+        // as registration time is as now, so this course is newest, so simply add course to storage
         coursesStorage.getStorage().get(courseRegistered.getCurrencyId()).add(courseRegistered);
 
         return successMessage();
-    }
-
-    /**
-     * Method checks whether provided course data is correct
-     * @param courseDto nullable
-     * @return true if OK
-     */
-    boolean courseDtoIsOk(CourseDto courseDto) {
-        // Check null argument
-        if (courseDto == null) {
-            return false;
-        }
-
-        //Check whether currency rate value is correct
-        if (courseDto.getCurrencyVal() <= 0.0f) {
-            return false;
-        }
-
-        //Check whether currency code is known
-        return (Currency.getAvailableCurrencies()
-                .contains(Currency.getInstance(courseDto.getCurrencyId())));
     }
 
     /**
@@ -80,6 +59,25 @@ public class CoursesService {
 
         if (!(getSupportedCurrencies().contains(courseDto.getCurrencyId()))) {
             return getResponseMessage(1, "Валюта не поддерживается");
+        }
+
+        return successMessage();
+    }
+
+    /**
+     * Сохранение массива данных курсов валют, полученного из эндпойнта
+     *
+     * @param courseData массив данных курсов, полученный из эндпойнта, nullable
+     * @return сообщение
+     */
+    public ResponseMessage loadCoursesData(CourseRegistered[] courseData) {
+        if (courseData == null) {
+            return getResponseMessage(1,
+                    "Аргумент null");
+        }
+        if (courseData.length == 0) {
+            return getResponseMessage(1,
+                    "Получен пустой массив");
         }
         return successMessage();
     }

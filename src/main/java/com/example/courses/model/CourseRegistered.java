@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class CourseRegistered {
-    private LocalDateTime registrationTime;
+    private LocalDateTime regTime;
     private String currencyId;
     private float currencyVal;
 }
