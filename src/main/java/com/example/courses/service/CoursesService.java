@@ -37,10 +37,7 @@ public class CoursesService {
         LocalDateTime registrationTime = LocalDateTime.now();
         CourseRegistered courseRegistered = CoursesMapper.INSTANCE.getCourseRegistered(courseDto);
         courseRegistered.setRegTime(registrationTime);
-        // as registration time is as now, so this course is newest, so simply add course to storage
-        coursesStorage.getStorage().get(courseRegistered.getCurrencyId()).add(courseRegistered);
-
-        return successMessage();
+        return coursesStorage.saveCourseRegistered(courseRegistered);
     }
 
     /**
@@ -91,16 +88,13 @@ public class CoursesService {
             if (checkCourseDto(CoursesMapper.INSTANCE.getCourseDto(c)).getErrCode() != 0) {
                 continue;
             }
-            LocalDateTime oldestTime = coursesStorage.getStorage().get(c.getCurrencyId()).get(0).getRegTime();
-            if (oldestTime.isAfter(c.getRegTime())) {
-                continue; // пропускаем слишком старый курс
+            coursesStorage.saveCourseRegistered(c);
+            countOfLoadedCourses++;
             }
 
-
-        }
-
-
-
-        return successMessage();
+        return getResponseMessage(Integer.min(1, totalCountOfCourses - countOfLoadedCourses),
+                "Получено курсов валют: " + totalCountOfCourses + ". Сохранено: " + countOfLoadedCourses);
     }
+
+
 }
