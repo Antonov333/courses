@@ -15,8 +15,8 @@ public class Utils {
         return supportedCurrencies;
     }
 
-    public static boolean currencyIsSupported(String currencyId) {
-        return supportedCurrencies.contains(currencyId);
+    public static boolean currencyNotSupported(String currencyId) {
+        return !supportedCurrencies.contains(currencyId);
     }
 
     public static ResponseMessage successMessage() {

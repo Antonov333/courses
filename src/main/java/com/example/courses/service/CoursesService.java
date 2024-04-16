@@ -109,7 +109,7 @@ public class CoursesService {
      */
     public CourseRegistered getLatest(String currencyId) {
         CourseRegistered course = new CourseRegistered();
-        if (!currencyIsSupported(currencyId)) { //wrong currencyId provided, so null returned
+        if (currencyNotSupported(currencyId)) { //wrong currencyId provided, so null returned
             return course;
         }
         HashMap<LocalDateTime, CourseRegistered> courses = coursesStorage.getStorage().get(currencyId).getCourseVsTime();
@@ -122,7 +122,7 @@ public class CoursesService {
     public List<CourseRegistered> getMax5(String currencyId) {
         List<CourseRegistered> list5 = new ArrayList<>();
         CourseRegistered[] max5 = new CourseRegistered[5];
-        if (!currencyIsSupported(currencyId)) { //wrong currencyId provided, so empty array returned
+        if (currencyNotSupported(currencyId)) { //wrong currencyId provided, so empty array returned
             return list5;
         }
 
