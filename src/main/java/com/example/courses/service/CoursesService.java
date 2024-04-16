@@ -133,4 +133,36 @@ public class CoursesService {
 
         return list5;
     }
+
+    public List<CourseRegistered> getCourseExtremum3(String currencyId) {
+
+        List<CourseRegistered> listOfPeaks = new ArrayList<>();
+
+        if (currencyNotSupported(currencyId)) {
+            return listOfPeaks;
+        }
+
+        HashMap<LocalDateTime, CourseRegistered> courses = coursesStorage.getCoursesWithTiming(currencyId);
+        if (courses.size() < 3) {
+            return listOfPeaks;
+        }
+
+        List<LocalDateTime> timeKeys = courses.keySet().stream().toList().stream().sorted(Comparator.reverseOrder()).toList();
+        int numberOfTimeKeys = timeKeys.size();
+
+        int countOfPeaks = 0;
+        for (int i = 1; i <= numberOfTimeKeys - 2; i++) {
+
+            if ((courses.get(timeKeys.get(i - 1)).getCurrencyVal() < courses.get(timeKeys.get(i)).getCurrencyVal())
+                    & (courses.get(timeKeys.get(i)).getCurrencyVal() > courses.get(timeKeys.get(i + 1)).getCurrencyVal())) {
+                listOfPeaks.add(courses.get(timeKeys.get(i)));
+                countOfPeaks++;
+            }
+            if (countOfPeaks >= 3) {
+                break;
+            }
+        }
+        return listOfPeaks;
+
+    }
 }

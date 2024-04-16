@@ -40,9 +40,12 @@ public class CoursesController {
     @GetMapping("/getCourseMax5")
     public ResponseEntity<List<CourseRegistered>> getMax5(@RequestParam(name = "currencyId") String currencyId) {
         return ResponseEntity.ok(coursesService.getMax5(currencyId));
-
-        //TODO: consider how to manager if several courses of same currency have same time but different values
-
     }
 
+    //TODO: consider how to manager if several courses of same currency have same time but different values
+
+    @GetMapping("/getCourseExtremum3")
+    public ResponseEntity<List<CourseRegistered>> getCourseExtremum3(@RequestParam(name = "currencyId") String currencyId) {
+        return ResponseEntity.ok(coursesService.getCourseExtremum3(currencyId));
+    }
 }

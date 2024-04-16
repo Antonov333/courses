@@ -25,6 +25,10 @@ public class CoursesStorage {
                 new CoursesWithTiming()));
     }
 
+    HashMap<LocalDateTime, CourseRegistered> getCoursesWithTiming(String currencyId) {
+        return storage.get(currencyId).getCourseVsTime();
+    }
+
     /**
      * Сохраняет данные курса валюты в хранилище
      *
