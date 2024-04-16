@@ -121,15 +121,14 @@ public class CoursesService {
 
     public List<CourseRegistered> getMax5(String currencyId) {
         List<CourseRegistered> list5 = new ArrayList<>();
-        CourseRegistered[] max5 = new CourseRegistered[5];
         if (currencyNotSupported(currencyId)) { //wrong currencyId provided, so empty array returned
             return list5;
         }
 
         List<CourseRegistered> courses = coursesStorage.getStorage().get(currencyId)
-                .getCourseVsTime().values().stream().toList();
+                .getCourseVsTime().values().stream().toList().stream()
+                .sorted(Comparator.comparing(CourseRegistered::getCurrencyVal, Comparator.reverseOrder())).toList();
 
-        courses.sort(Comparator.comparing(CourseRegistered::getCurrencyVal, Comparator.reverseOrder()));
         list5 = courses.stream().limit(5).toList();
 
         return list5;
