@@ -8,10 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +30,19 @@ public class CoursesController {
     @Operation(summary = "Загрузка массива курсов")
     public ResponseEntity<ResponseMessage> loadData(@RequestBody CourseRegistered[] courseData) {
         return ResponseEntity.ok(coursesService.loadCoursesData(courseData));
+    }
+
+    @GetMapping("/getCourse")
+    public ResponseEntity<CourseRegistered> getLatestCourse(@RequestParam(name = "currencyId") String currencyId) {
+        return ResponseEntity.ok(coursesService.getLatest(currencyId));
+    }
+
+    @GetMapping("/getCourseMax5")
+    public ResponseEntity<List<CourseRegistered>> getMax5(@RequestParam(name = "currencyId") String currencyId) {
+        return ResponseEntity.ok(coursesService.getMax5(currencyId));
+
+        //TODO: consider how to manager if several courses of same currency have same time but different values
+
     }
 
 }

@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.example.courses.utils.Utils.*;
 
@@ -90,11 +94,44 @@ public class CoursesService {
             }
             coursesStorage.saveCourseRegistered(c);
             countOfLoadedCourses++;
-            }
+        }
 
         return getResponseMessage(Integer.min(1, totalCountOfCourses - countOfLoadedCourses),
                 "Получено курсов валют: " + totalCountOfCourses + ". Сохранено: " + countOfLoadedCourses);
     }
 
 
+    /**
+     * Get latest course of given currency
+     *
+     * @param currencyId nullable currency code of 3 chars
+     * @return
+     */
+    public CourseRegistered getLatest(String currencyId) {
+        CourseRegistered course = new CourseRegistered();
+        if (!currencyIsSupported(currencyId)) { //wrong currencyId provided, so null returned
+            return course;
+        }
+        HashMap<LocalDateTime, CourseRegistered> courses = coursesStorage.getStorage().get(currencyId).getCourseVsTime();
+        List<LocalDateTime> timeKeys = courses.keySet().stream().sorted().toList();
+
+        course = courses.get(timeKeys.get(timeKeys.size() - 1)); // retrieving latest course of given currency
+        return course;
+    }
+
+    public List<CourseRegistered> getMax5(String currencyId) {
+        List<CourseRegistered> list5 = new ArrayList<>();
+        CourseRegistered[] max5 = new CourseRegistered[5];
+        if (!currencyIsSupported(currencyId)) { //wrong currencyId provided, so empty array returned
+            return list5;
+        }
+
+        List<CourseRegistered> courses = coursesStorage.getStorage().get(currencyId)
+                .getCourseVsTime().values().stream().toList();
+
+        courses.sort(Comparator.comparing(CourseRegistered::getCurrencyVal, Comparator.reverseOrder()));
+        list5 = courses.stream().limit(5).toList();
+
+        return list5;
+    }
 }

@@ -12,5 +12,8 @@ import java.util.HashMap;
  */
 @Data
 public class CoursesWithTiming {
+    /**
+     * Map (LocalDateTime, {@link CourseRegistered})
+     */
     private final HashMap<LocalDateTime, CourseRegistered> courseVsTime = new HashMap<>();
 }
