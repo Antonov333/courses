@@ -105,7 +105,7 @@ public class CoursesService {
      * Get latest course of given currency
      *
      * @param currencyId nullable currency code of 3 chars
-     * @return
+     * @return latest course entity
      */
     public CourseRegistered getLatest(String currencyId) {
         CourseRegistered course = new CourseRegistered();
@@ -157,6 +157,7 @@ public class CoursesService {
                     & (courses.get(timeKeys.get(i)).getCurrencyVal() > courses.get(timeKeys.get(i + 1)).getCurrencyVal())) {
                 listOfPeaks.add(courses.get(timeKeys.get(i)));
                 countOfPeaks++;
+                i++; // if course(i) is a peak, then course(i+1) could not be a peak. So, we skip checking course(i+1)
             }
             if (countOfPeaks >= 3) {
                 break;

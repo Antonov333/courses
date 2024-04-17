@@ -5,6 +5,7 @@ import com.example.courses.model.CourseRegistered;
 import com.example.courses.model.ResponseMessage;
 import com.example.courses.service.CoursesService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +34,25 @@ public class CoursesController {
     }
 
     @GetMapping("/getCourse")
-    public ResponseEntity<CourseRegistered> getLatestCourse(@RequestParam(name = "currencyId") String currencyId) {
+    @Operation(summary = "Получение самого нового курса выбранной валюты")
+    public ResponseEntity<CourseRegistered> getLatestCourse(
+            @Parameter(name = "currencyId", description = "Трехсимвольный код валюты") @RequestParam(name = "currencyId") String currencyId) {
         return ResponseEntity.ok(coursesService.getLatest(currencyId));
     }
 
     @GetMapping("/getCourseMax5")
-    public ResponseEntity<List<CourseRegistered>> getMax5(@RequestParam(name = "currencyId") String currencyId) {
+    @Operation(summary = "Получение 5 последних самых высоких курсов выбранной валюты")
+    public ResponseEntity<List<CourseRegistered>> getMax5(
+            @Parameter(name = "currencyId", description = "Трехсимвольный код валюты") @RequestParam(name = "currencyId") String currencyId) {
         return ResponseEntity.ok(coursesService.getMax5(currencyId));
     }
 
     //TODO: consider how to manager if several courses of same currency have same time but different values
 
     @GetMapping("/getCourseExtremum3")
-    public ResponseEntity<List<CourseRegistered>> getCourseExtremum3(@RequestParam(name = "currencyId") String currencyId) {
+    @Operation(summary = "Получение трех наивысших пиков курсов заданной валюты")
+    public ResponseEntity<List<CourseRegistered>> getCourseExtremum3(
+            @Parameter(name = "currencyId", description = "Трехсимвольный код валюты") @RequestParam(name = "currencyId") String currencyId) {
         return ResponseEntity.ok(coursesService.getCourseExtremum3(currencyId));
     }
 }
