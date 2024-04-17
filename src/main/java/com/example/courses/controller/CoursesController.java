@@ -47,7 +47,7 @@ public class CoursesController {
         return ResponseEntity.ok(coursesService.getMax5(currencyId));
     }
 
-    //TODO: consider how to manager if several courses of same currency have same time but different values
+    // Considered newer course entity of same timing overwrites existing one
 
     @GetMapping("/getCourseExtremum3")
     @Operation(summary = "Получение трех наивысших пиков курсов заданной валюты")
